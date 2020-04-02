@@ -70,11 +70,3 @@ CHIP ALU {
 
     Or16(a=preOutput, b[0..15]=false, out=out); 
 }
-
-
-
-
-
-
-
-
