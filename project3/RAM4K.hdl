@@ -1,0 +1,37 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/03/b/RAM4K.hdl
+
+/**
+ * Memory of 4K registers, each 16 bit-wide. Out holds the value
+ * stored at the memory location specified by address. If load==1, then 
+ * the in value is loaded into the memory location specified by address 
+ * (the loaded value will be emitted to out from the next time step onward).
+ */
+
+CHIP RAM4K {
+    IN in[16], load, address[12];
+    OUT out[16];
+
+    PARTS:
+    // Put your code here:
+    // address[0..8] -> address to access the specific RAM64 module within the RAM512 module
+    // address[9..11] -> address to access the specific RAM512 module within the RAM4K module
+
+    // selecting the specific RAM512 module within the RAM4K module
+    DMux8Way(in=load, sel=address[9..11], a=RAMa, b=RAMb, c=RAMc, d=RAMd, e=RAMe, f=RAMf, g=RAMg, h=RAMh);
+
+    // loading the 16 bit value into the specific RAM64 module wihtin the RAM512 module
+    RAM512(in=in, load=RAMa, address=address[0..8], out=outa);
+    RAM512(in=in, load=RAMb, address=address[0..8], out=outb);
+    RAM512(in=in, load=RAMc, address=address[0..8], out=outc);
+    RAM512(in=in, load=RAMd, address=address[0..8], out=outd);
+    RAM512(in=in, load=RAMe, address=address[0..8], out=oute);
+    RAM512(in=in, load=RAMf, address=address[0..8], out=outf);
+    RAM512(in=in, load=RAMg, address=address[0..8], out=outg);
+    RAM512(in=in, load=RAMh, address=address[0..8], out=outh);
+
+    // emitting the 16 bit output (READ Operation)
+    Mux8Way16(a=outa, b=outb, c=outc, d=outd, e=oute, f=outf, g=outg, h=outh, sel=address[9..11], out=out);
+}
